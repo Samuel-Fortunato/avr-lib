@@ -5,4 +5,4 @@ add_library(avr-lib OBJECT
     adc/adc.c
 )
 
-include_directories(include/)
+target_include_directories(avr-lib PUBLIC include/)
