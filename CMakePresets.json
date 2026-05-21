@@ -1,0 +1,14 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "avr-debug",
+      "displayName": "AVR ATmega328p",
+      "binaryDir": "${sourceDir}/build",
+      "toolchainFile": "${sourceDir}/avr-toolchain.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    }
+  ]
+}

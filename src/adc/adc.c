@@ -3,10 +3,10 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-uint8_t initialized = 0;
+uint8_t adc_initialized = 0;
 
-uint8_t async_10bit;
-ADC_CHANNEL async_channel;
+volatile uint8_t async_10bit;
+volatile ADC_CHANNEL async_channel;
 void (*_callback8)(ADC_CHANNEL channel, uint8_t value);
 void (*_callback10)(ADC_CHANNEL channel, uint16_t value);
 
@@ -15,14 +15,14 @@ void adc_init(ADC_REF v_ref, uint8_t prescaler) {
 	ADCSRA = _BV(ADEN) | (prescaler & 0b00000111);
 	
 	//		voltage_reference
-	ADMUX = (v_ref << REFS0);
+	ADMUX = (v_ref << REFS0) & (0x3 << REFS0);
 	
-	initialized = 1;
+	adc_initialized = 1;
 }
 
 // Synchronous functions
 int8_t adc_read8(ADC_CHANNEL channel, uint8_t *dest) {	
-	if (!initialized) {
+	if (!adc_initialized) {
 		return -1;
 	}
 	
@@ -40,7 +40,7 @@ int8_t adc_read8(ADC_CHANNEL channel, uint8_t *dest) {
 	return 0;
 }
 int8_t adc_read10(ADC_CHANNEL channel, uint16_t *dest) {
-	if (!initialized) {
+	if (!adc_initialized) {
 		return -1;
 	}
 	
@@ -61,7 +61,7 @@ int8_t adc_read10(ADC_CHANNEL channel, uint16_t *dest) {
 
 // Asynchronous functions
 int8_t adc_start_conv8(ADC_CHANNEL channel, void (*callback)(ADC_CHANNEL channel, uint8_t value)) {
-	if (!initialized) {
+	if (!adc_initialized) {
 		return -1;
 	}
 	if ( bit_is_set(ADCSRA, ADSC) ) {
@@ -81,7 +81,7 @@ int8_t adc_start_conv8(ADC_CHANNEL channel, void (*callback)(ADC_CHANNEL channel
 	return 0;
 }
 int8_t adc_start_conv10(ADC_CHANNEL channel, void (*callback)(ADC_CHANNEL channel, uint16_t value)) {
-	if (!initialized) {
+	if (!adc_initialized) {
 		return -1;
 	}
 	if ( bit_is_set(ADCSRA, ADSC) ) {

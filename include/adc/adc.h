@@ -3,9 +3,9 @@
 #include <stdint.h>
 
 typedef enum {
-	REF_EXTERNAL = 0,
-	REF_AVCC = 1,
-	REF_INTERNAL = 3,
+	ADC_REF_EXTERNAL = 0,
+	ADC_REF_AVCC = 1,
+	ADC_REF_INTERNAL = 3,
 } ADC_REF;
 
 typedef enum {
